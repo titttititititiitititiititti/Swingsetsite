@@ -1,0 +1,31 @@
+/*
+ * The enquiry form only.
+ *
+ * Deliberately its own file rather than more rules in styles.css: the form was
+ * added after the page was built, and keeping it separate means neither piece
+ * of work can quietly overwrite the other's. The look comes from .form-card in
+ * styles.css — what is here is only what that did not already cover.
+ */
+
+/* Two short fields side by side, stacking on a phone. */
+.form-row { display: grid; gap: 0 18px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+/* The field only a bot fills in. Off-screen rather than display:none, which
+   some bots are built to skip. */
+.honey {
+  position: absolute; left: -9999px; width: 1px; height: 1px;
+  overflow: hidden; opacity: 0;
+}
+
+.form-note { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+
+/* Said out loud by a screen reader as soon as it changes, so somebody not
+   looking at the button still learns what happened. */
+.form-status { margin: 18px 0 0; font-size: 15px; line-height: 1.5; }
+.form-status:empty { display: none; }
+.form-status.bad { color: var(--amber); }
+
+.form-done { text-align: center; padding: 10px 0; }
+.form-done h3 { font-size: clamp(22px, 2.4vw, 30px); margin: 0 0 10px; }
+.form-done p { color: var(--muted); margin: 0; }
