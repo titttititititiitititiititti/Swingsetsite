@@ -7,6 +7,7 @@
   <meta name="description" content="One app for every licence, ticket, medical and timesheet. It reads your documents, chases renewals, answers questions in plain English and gets timesheets signed on site." />
   <meta name="theme-color" content="#f7f7f5" />
   <meta property="og:title" content="Swingset" />
+  <meta property="og:image" content="assets/tour-poster.jpg" />
   <meta property="og:description" content="Onboarding, compliance, rosters and timesheets for mining labour hire — in one app." />
   <link rel="icon" href="assets/brand/favicon-32.png" sizes="32x32" />
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon-180.png" />
@@ -50,7 +51,10 @@
         <p class="lede">Onboarding, compliance, rosters and timesheets — read, sorted, chased and signed in one place, so nothing reaches the gate unfinished.</p>
         <div class="hero-actions">
           <a class="btn" href="#contact">Get in touch</a>
-          <a class="btn btn-ghost" href="#features">See what it does</a>
+          <button class="btn btn-ghost" type="button" data-open-tour>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" /></svg>
+            Watch the 90-second tour
+          </button>
         </div>
       </div>
       <div class="hero-device">
@@ -343,6 +347,15 @@
     <p>Built for mining labour hire.</p>
     <p class="muted">© 2026 Swingset</p>
   </footer>
+
+  <div class="tour" hidden>
+    <div class="tour-inner" role="dialog" aria-modal="true" aria-label="The Swingset tour">
+      <button class="tour-close" type="button" aria-label="Close the tour">×</button>
+      <video controls playsinline preload="none" poster="assets/tour-poster.jpg">
+        <source src="assets/swingset-tour.mp4" type="video/mp4" />
+      </video>
+    </div>
+  </div>
 
   <script src="script.js" defer></script>
   <script src="form.js" defer></script>

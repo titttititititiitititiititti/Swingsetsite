@@ -139,8 +139,8 @@ window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 // ------------------------------------------------------------------ tour
-// Only when the page has one: there is no tour video yet. Adding one is a
-// .tour dialog holding the <video>, and a [data-open-tour] button to open it.
+// The ad, in a pop-up player: the .tour dialog holds the <video> (served from
+// assets/ on Render), and any [data-open-tour] button opens it.
 const tour = document.querySelector(".tour");
 if (tour) {
   const video = tour.querySelector("video");
