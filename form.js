@@ -1,20 +1,16 @@
 // Sending the enquiry form.
 //
 // This website is static, so it cannot hold a mail key — a key in a file the
-// browser downloads is a key anybody has. It posts to the GRB app instead,
-// which holds the key and sends from a domain verified with Resend. That
-// endpoint accepts this site's origin and nothing else, so it cannot be used
-// as a mail relay from somebody else's page.
+// browser downloads is a key anybody has. It posts to the Swingset app instead,
+// which holds the key and sends from a domain verified with Resend. Where the
+// enquiry lands is set on the app's server, never here. The endpoint accepts
+// this site's origin and nothing else, so it cannot be used as a mail relay
+// from somebody else's page.
 
 const ENDPOINT =
   location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:"
     ? "http://localhost:3000/api/enquiry"
-    : "https://app.grbmining.com.au/api/enquiry";
-
-// Somewhere to go when the form itself will not work. Worth having in the page
-// rather than only in a support inbox: a prospect who hits an error and finds
-// no way through simply leaves.
-const FALLBACK = "bailey@grb.com.au";
+    : "https://app.getswingset.com.au/api/enquiry";
 
 const form = document.querySelector("#enquiry-form");
 const status = document.querySelector("#form-status");
@@ -62,14 +58,11 @@ if (form && status && button) {
         return;
       }
 
-      say(
-        `${result.error || "Something went wrong"}. You can email us directly at ${FALLBACK}.`,
-        true,
-      );
+      say(`${result.error || "Something went wrong"}. Please try again in a minute.`, true);
     } catch {
-      // No network, or the app is down. Either way the person still has a way
-      // of reaching us, which is the only thing that matters here.
-      say(`Couldn't send that just now. Please email us at ${FALLBACK}.`, true);
+      // No network, or the app is down. Their words are still in the boxes,
+      // so trying again costs them nothing.
+      say("Couldn't send that just now. Please try again in a minute.", true);
     } finally {
       sending = false;
       button.removeAttribute("aria-busy");

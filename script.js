@@ -139,8 +139,8 @@ window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
 // ------------------------------------------------------------------ tour
-// Only when the page has one: the Swingset ad isn't made yet. Adding it back
-// is the .tour dialog and a [data-open-tour] button, as on the Mining Humans page.
+// Only when the page has one: there is no tour video yet. Adding one is a
+// .tour dialog holding the <video>, and a [data-open-tour] button to open it.
 const tour = document.querySelector(".tour");
 if (tour) {
   const video = tour.querySelector("video");
