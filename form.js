@@ -1,16 +1,11 @@
 // Sending the enquiry form.
 //
-// This website is static, so it cannot hold a mail key — a key in a file the
-// browser downloads is a key anybody has. It posts to the Swingset app instead,
-// which holds the key and sends from a domain verified with Resend. Where the
-// enquiry lands is set on the app's server, never here. The endpoint accepts
-// this site's origin and nothing else, so it cannot be used as a mail relay
-// from somebody else's page.
+// The site is static, so enquiries go through FormSubmit (formsubmit.co), which
+// emails each one to INBOX. No account or key: the first enquiry sends a
+// one-time "activate" email to INBOX, and nothing arrives until that's clicked.
 
-const ENDPOINT =
-  location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:"
-    ? "http://localhost:3000/api/enquiry"
-    : "https://app.getswingset.com.au/api/enquiry";
+const INBOX = "business@getswingset.com.au";
+const ENDPOINT = `https://formsubmit.co/ajax/${INBOX}`;
 
 const form = document.querySelector("#enquiry-form");
 const status = document.querySelector("#form-status");
@@ -27,12 +22,8 @@ if (form && status && button) {
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    // A second tap while the first is in flight would send the enquiry twice.
-    // Guarded with a flag rather than the disabled attribute: a submit button
-    // that disables itself can cancel the submit that was meant to run.
+    // Stops a double tap sending the enquiry twice.
     if (sending) return;
-
-    // Let the browser say which box is wrong before anything is sent.
     if (!form.reportValidity()) return;
 
     sending = true;
@@ -40,16 +31,23 @@ if (form && status && button) {
     button.textContent = "Sending…";
     say("");
 
+    const data = new FormData(form);
+    const company = data.get("company") || "a company";
+    data.set("_subject", `Swingset enquiry from ${company}`);
+    data.set("_template", "table");
+    data.set("_captcha", "false");
+    // Lets you hit Reply in your inbox and answer the person directly.
+    data.set("_replyto", data.get("email") || "");
+
     try {
       const response = await fetch(ENDPOINT, {
         method: "POST",
-        body: new FormData(form),
+        headers: { Accept: "application/json" },
+        body: data,
       });
-      // The endpoint answers with JSON whether it worked or not, so a refusal
-      // arrives as a reason rather than as a page that never changes.
       const result = await response.json().catch(() => ({}));
 
-      if (result.success) {
+      if (response.ok && String(result.success) === "true") {
         form.outerHTML = `
           <div class="form-done">
             <h3>Thanks — that's with us.</h3>
@@ -58,11 +56,9 @@ if (form && status && button) {
         return;
       }
 
-      say(`${result.error || "Something went wrong"}. Please try again in a minute.`, true);
+      say(`Something went wrong. You can email us directly at ${INBOX}.`, true);
     } catch {
-      // No network, or the app is down. Their words are still in the boxes,
-      // so trying again costs them nothing.
-      say("Couldn't send that just now. Please try again in a minute.", true);
+      say(`Couldn't send that just now. Please email us at ${INBOX}.`, true);
     } finally {
       sending = false;
       button.removeAttribute("aria-busy");
